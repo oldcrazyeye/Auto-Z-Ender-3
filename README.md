@@ -1,2 +1,2 @@
 # Auto-Z-Ender-3
-Auto z calibration on Ender 3
+Auto z calibration is now possible on Ender 3 series printers(atm only tested on ender 3 pro). This is a mounting system that allows you to use the Voron 2.4 sexbolt by HartK or the clone by Mellow. These designs allow mounting the sexbolt without drilling holes in you bed carriage, meanwhile retaining stability. Big thanks to Protoloft and his excellent work on this which makes this even possible. (Will update with config and more soon)
