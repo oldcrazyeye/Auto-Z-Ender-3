@@ -1,0 +1,68 @@
+~START_PRINT~
+[gcode_macro START_PRINT]
+
+gcode:
+
+    G92 E0 ; Reset Extruder
+
+    {% set bed_temp = params.bed_temp|default(110)|float %}
+
+    {% set extruder_temp = params.extruder_temp|default(240)|float %}
+
+    {% set FL_SIZE = params.SIZE|default("0_0_0_0")|string %}
+
+    M140 S{bed_temp} ;Start heating bed
+
+    G28 ; Home all axes
+
+    M190 S{bed_temp} ;Wait for bed to reach temp before proceeding
+
+    #Z_TILT_ADJUST
+
+    M104 S{extruder_temp} ;Start heating extruder
+
+    PROBE_OUT
+
+    ADAPTIVE_BED_MESH SIZE={FL_SIZE}
+
+    G1 Y0 F10000
+
+    PROBE_IN
+
+    CALIBRATE_Z #ADD AFTER YOUR LEVELING ROUTINE AND BEFORE PRIME LINE, BED AND NOZZLE SHOULD BE FULLY HEATED IF USING BRUSH ELSE 180 ON NOZZLE AT LEAST
+
+    G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+
+    G1 X0.1 Y20 Z0.3 F5000.0 ; Move to start position
+
+    M109 S{extruder_temp} ;Wait for extruder to reach temp before proceeding
+
+    G1 X0.1 Y200.0 Z0.3 F1500.0 E15 ; Draw the first line
+
+    G1 X0.4 Y200.0 Z0.3 F5000.0 ; Move to side a little
+
+    G1 X0.4 Y20 Z0.3 F1500.0 E30 ; Draw the second line
+
+    G92 E0 ; Reset Extruder
+
+    G1 Z3.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+
+    G1 X5 Y20 Z0.3 F5000.0 ; Move over to prevent blob squish
+    
+    ~NOZZLE_BRUSH~
+    [gcode_macro NOZZLE_BRUSH]
+gcode:
+    G90
+    G1 Z16 F3000 # raise z to clear brush
+    G1 X27 Y235 F6000 #starting coordinates of brush
+    G1 Z11 F3000  #z height of scrub
+    G1 X55 F10000 # end location of scrub
+    G1 X27 F10000
+    G1 X55 F10000
+    G1 X27 F10000
+    G1 X55 F10000
+    G1 X27 F10000
+    G1 X55 F10000
+    G1 X27 F10000
+    G1 X65 F10000 #final swipe and clear
+    G1 Z16 F3000  #raise z to clear
