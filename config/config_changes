@@ -76,7 +76,7 @@ speed: 100
 #   If true, the first probing is done faster by the probing speed.
 #   This is to get faster down and the result is not recorded as a
 #   probing sample. The default is false.
-start_gcode: NOZZLE_BRUSH
+start_gcode: NOZZLE_BRUSH #THIS CALLS THE NOZZLE_BRUSH MACRO IF USING MINE, OTHERWISE ENTER YOUR BRUSH MACRO OR COMMENT OUT
 #   A list of G-Code commands to execute prior to each calibration command.
 #   See docs/Command_Templates.md for G-Code format. This can be used to
 #   attach the probe.
