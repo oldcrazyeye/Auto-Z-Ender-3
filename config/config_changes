@@ -1,5 +1,5 @@
 ~Z_CALIBRATION~
-```##To-Do##
+##To-Do##
 # 1. make sure the nozzle and the omron body (not the switch!!) reach the bolthead (See images on Discord)
 # 2. Make a backup of your cfg
 # 3. Read Protolofts Readme about the script implementation to install it and understand how it works
@@ -90,10 +90,10 @@ end_gcode: PROBE_IN #change this if your macros are named differently than from 
 ###################
 #   A list of G-Code commands to execute after each calibration command.
 #   See docs/Command_Templates.md for G-Code format. This can be used to
-#   detach the probe afterwards.```
+#   detach the probe afterwards.
 
 ~STEPPER_Z~
-```[stepper_z]
+[stepper_z]
 step_pin: PA15
 dir_pin: PA8
 enable_pin: !PD1
@@ -109,10 +109,10 @@ position_max: 230
 homing_speed: 25
 homing_retract_dist: 5.0
 homing_retract_speed: 10
-second_homing_speed: 5```
+second_homing_speed: 5
 
 ~HOMING_OVERRIDE~
-```[homing_override]
+[homing_override]
 set_position_z:0 # Make printer think Z axis is at zero, so we can force a move upwards away from build plate
 gcode:
     G90
@@ -124,7 +124,7 @@ gcode:
     G28 Z #Z WILL NOW HOME ON THE SEXBOLT VIA THE NOZZLE
     G1 Z6 F3000
     G1 X0 Y0 F6000
-    #PROBE_IN #COMMENT OUT OR REMOVE```
+    #PROBE_IN #COMMENT OUT OR REMOVE
     
     
     
