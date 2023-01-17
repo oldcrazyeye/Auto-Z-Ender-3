@@ -11,12 +11,11 @@
 ########################
 
 [z_calibration]
-nozzle_xy_position: 172,238 #-5 for the 4-armed tested cover (may be different for the US nut)
+nozzle_xy_position: 172,238 #NOZZLE XY POSITION FOR TOUCHING THE SEXBOLT
 ########################
 #   A X, Y coordinate (e.g. 100,100) of the nozzle, clicking on the Z endstop.
 
-switch_xy_position: 161,205 #-5 for the 4 armed tested cover (may be different for the US nut)
-########################
+switch_xy_position: 161,205 #PROBE XY POSITION FOR TOUCHING THE SEXBOLT. MAKE SURE TO ONLY TOUCH THE SEXBOLT WITH THE BLACK PROBE BODY NOT THE BUTTON ITSELF
 #   A X, Y coordinate (e.g. 100,100) of the probe's switch body, clicking on
 #   the Z endstop.
 
