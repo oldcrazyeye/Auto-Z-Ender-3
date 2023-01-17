@@ -80,7 +80,7 @@ start_gcode: NOZZLE_BRUSH #THIS CALLS THE NOZZLE_BRUSH MACRO IF USING MINE, OTHE
 #   A list of G-Code commands to execute prior to each calibration command.
 #   See docs/Command_Templates.md for G-Code format. This can be used to
 #   attach the probe.
-before_switch_gcode: PROBE_OUT #change this if your macros are named differently than from Klack config
+before_switch_gcode: _PROBE_OUT #change this TO AVOID AN EXTRA TRAVEL. USED ONLY FOR CALIBRATE_Z
 ##############################
 #   A list of G-Code commands to execute prior to each probing on the
 #   mag-probe. See docs/Command_Templates.md for G-Code format. This can be
