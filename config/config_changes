@@ -1,0 +1,131 @@
+~Z_CALIBRATION~
+```##To-Do##
+# 1. make sure the nozzle and the omron body (not the switch!!) reach the bolthead (See images on Discord)
+# 2. Make a backup of your cfg
+# 3. Read Protolofts Readme about the script implementation to install it and understand how it works
+# 4. Remove z_offset commands from the start gcode and saved values at the bottom of your config (probe and/or endstop)
+# 5. Decrease all homig and probing speeds for the first test so you have time to react!
+
+########################
+##z_calibrate settings##
+########################
+
+[z_calibration]
+nozzle_xy_position: 172,238 #-5 for the 4-armed tested cover (may be different for the US nut)
+########################
+#   A X, Y coordinate (e.g. 100,100) of the nozzle, clicking on the Z endstop.
+
+switch_xy_position: 161,205 #-5 for the 4 armed tested cover (may be different for the US nut)
+########################
+#   A X, Y coordinate (e.g. 100,100) of the probe's switch body, clicking on
+#   the Z endstop.
+
+bed_xy_position: 117.5,117.5
+#   a X, Y coordinate (e.g. 100,100) where the print surface (e.g. the center
+#   point) is probed. These coordinates will be adapted by the
+#   probe's X and Y offsets. The default is the relative_reference_index
+#   of the configured bed_mesh, if configured. It's possible to change the relative
+#   reference index at runtime or use the GCode argument BED_POSITION of CALIBRATE_Z.
+
+switch_offset: 0.68 #Omron is 0.5!!!
+###################
+#   The trigger point offset of the used mag-probe switch.
+#   Larger values will position the nozzle closer to the bed.
+#   This needs to be find out manually. More on this later
+#   in this section..
+
+max_deviation: 1.0   
+#   The maximum allowed deviation of the calculated offset.
+#   If the offset exceeds this value, it will stop!
+#   The default is 1.0 mm.
+#samples: default from "probe:samples" section
+#   The number of times to probe each point. The probed z-values
+#   will be averaged. The default is from the probe's configuration.
+#samples_tolerance: default from "probe:samples_tolerance" section
+#   The maximum Z distance (in mm) that a sample may differ from other
+#   samples. The default is from the probe's configuration.
+#samples_tolerance_retries: default from "probe:samples_tolerance_retries" section
+#   The number of times to retry if a sample is found that exceeds
+#   samples_tolerance. The default is from the probe's configuration.
+#samples_result: default from "probe:samples_result" section
+#   The calculation method when sampling more than once - either
+#   "median" or "average". The default is from the probe's configuration.
+clearance: 6
+#   The distance in mm to move up before moving to the next
+#   position. The default is two times the z_offset from the probe's
+#   configuration.
+#position_min: default from "stepper_z:position_min" section.
+#   Minimum valid distance (in mm) used for probing move. The
+#   default is from the Z rail configuration.
+speed: 100
+#   The moving speed in X and Y. The default is 50 mm/s.
+#lift_speed: default from "probe:lift_speed" section
+#   Speed (in mm/s) of the Z axis when lifting the probe between
+#   samples and clearance moves. The default is from the probe's
+#   configuration.
+#probing_speed: default from "stepper_z:homing_speed" section.
+#   The fast probing speed (in mm/s) used, when probing_first_fast
+#   is activated. The default is from the Z rail configuration.
+#probing_second_speed: default from "stepper_z:second_homing_speed" section.
+#   The slower speed (in mm/s) for probing the recorded samples.
+#   The default is second_homing_speed of the Z rail configuration.
+#probing_retract_dist: default from "stepper_z:homing_retract_dist" section.
+#   Distance to retract (in mm) before probing the next sample.
+#   The default is homing_retract_dist from the Z rail configuration.
+#probing_first_fast: false
+#   If true, the first probing is done faster by the probing speed.
+#   This is to get faster down and the result is not recorded as a
+#   probing sample. The default is false.
+start_gcode: NOZZLE_BRUSH
+#   A list of G-Code commands to execute prior to each calibration command.
+#   See docs/Command_Templates.md for G-Code format. This can be used to
+#   attach the probe.
+before_switch_gcode: PROBE_OUT #change this if your macros are named differently than from Klack config
+##############################
+#   A list of G-Code commands to execute prior to each probing on the
+#   mag-probe. See docs/Command_Templates.md for G-Code format. This can be
+#   used to attach the probe after probing on the nozzle and before probing
+#   on the mag-probe.
+end_gcode: PROBE_IN #change this if your macros are named differently than from Klack config
+###################
+#   A list of G-Code commands to execute after each calibration command.
+#   See docs/Command_Templates.md for G-Code format. This can be used to
+#   detach the probe afterwards.```
+
+~STEPPER_Z~
+```[stepper_z]
+step_pin: PA15
+dir_pin: PA8
+enable_pin: !PD1
+microsteps: 16
+rotation_distance: 40
+gear_ratio: 80:16
+full_steps_per_rotation: 200
+#endstop_pin: probe:z_virtual_endstop #COMMENT OUT OR REMOVE ALONG WITH ALL PROBE ENTRIES SAVED IN GREEN AT THE BOTTOM OF PRINTER.CFG
+endstop_pin: ^PC0 # PIN CHOSEN FOR SEXBOLT ON MAIN BOARD
+position_endstop: 4 # ROUGHLY MEASURE THE POSITION FROM THE TOP OF YOUR BUILD PLATE TO THE TOP OF THE SEXBOLT. SEXBOLT SHOULD BE NO HIGHER THAN 4MM
+position_min: -13 # SOME NUMBER BELOW ZERO
+position_max: 230
+homing_speed: 25
+homing_retract_dist: 5.0
+homing_retract_speed: 10
+second_homing_speed: 5```
+
+~HOMING_OVERRIDE~
+```[homing_override]
+set_position_z:0 # Make printer think Z axis is at zero, so we can force a move upwards away from build plate
+gcode:
+    G90
+    G1 Z10 F3000 ; move up to prevent accidentally scratching build plate    
+    G28 X
+    G28 Y
+    #PROBE_OUT #COMMENT OUT OR REMOVE AS IT IS NO LONGER NEEDED FOR HOMING
+    G1 X172 Y238 F6000 #THE POSITION IN X,Y OF YOUR NOZZLE OVER THE SEXBOLT
+    G28 Z #Z WILL NOW HOME ON THE SEXBOLT VIA THE NOZZLE
+    G1 Z6 F3000
+    G1 X0 Y0 F6000
+    #PROBE_IN #COMMENT OUT OR REMOVE```
+    
+    
+    
+
